@@ -4,7 +4,7 @@
 
 ## About
 
-GoldenCheetah is an open-source data analysis tool primarily written in C++
+[GoldenCheetah](https://github.com/GoldenCheetah/GoldenCheetah) is an open-source data analysis tool primarily written in C++
 with Qt for cyclists and triathletes
 with support for training as well.
 
@@ -23,12 +23,11 @@ On Ubuntu 16.04:
 
 ```
 # install & init snapcraft
-apt update
-apt install -y snapcraft
+sudo apt install -y snapcraft
 snapcraft init
 
 # clone this repo
-git clone ...
+git clone https://github.com/clauded/goldencheetah-snap.git
 
 # adjust snap/snapcraft.yaml to your needs
 
@@ -41,4 +40,4 @@ goldencheetah.GoldenCheetah
 
 ```
 
-Some references on how to compile GoldenCheetah: http://gc.stand2surf.net/Ubuntu-14.04/qt551-sdk.html
+Some references on how to manually compile GoldenCheetah: http://gc.stand2surf.net/Ubuntu-14.04/qt551-sdk.html
