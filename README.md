@@ -24,10 +24,10 @@ On Ubuntu 16.04:
 ```
 # install & init snapcraft
 sudo apt install -y snapcraft
-snapcraft init
 
 # clone this repo
 git clone https://github.com/clauded/goldencheetah-snap.git
+cd goldencheetah-snap
 
 # adjust snap/snapcraft.yaml to your needs
 
