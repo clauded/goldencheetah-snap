@@ -9,11 +9,11 @@ description: |
   It can then manipulate and view the data, as well as analyze it.
 grade: stable
 confinement: strict
-#icon: icon.png
+icon: snap/gui/icon.png
 apps:
   GoldenCheetah:
     command: desktop-launch $SNAP/opt/GoldenCheetah/GoldenCheetah
-    #desktop: $SNAP/usr/share/applications/goldencheetah.desktop
+    desktop: snap/gui/goldencheetah.desktop
     plugs:
       - home
       - x11
@@ -114,7 +114,7 @@ parts:
       - qtbase5-private-dev
 
   # Additional files if any
-  misc-files:
-    source: files/
-    plugin: dump
-    after: [goldencheetah]
+  #misc-files:
+  #  source: files/
+  #  plugin: dump
+  #  after: [goldencheetah]

@@ -7,3 +7,4 @@ TryExec=/opt/GoldenCheetah/GoldenCheetah
 Exec=GoldenCheetah
 Icon=/usr/share/pixmaps/gc.png
 Keywords=Cycling;Training;Bike;Ride
+Name[fr_CA]=goldencheetah
