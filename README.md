@@ -1,4 +1,4 @@
-<img src="https://github.com/GoldenCheetah/GoldenCheetah/raw/master/src/Resources/images/gc.png" height="25%" width="25%">
+<img src="https://github.com/GoldenCheetah/GoldenCheetah/raw/master/src/Resources/images/gc.png" height="20%" width="20%">
 
 # GoldenCheetah
 
@@ -40,4 +40,8 @@ goldencheetah.GoldenCheetah
 
 ```
 
-Some references on how to manually compile GoldenCheetah: http://gc.stand2surf.net/Ubuntu-14.04/qt551-sdk.html
+Some references on how to manually compile GoldenCheetah on Linux:
+
+- http://gc.stand2surf.net/Ubuntu-14.04/qt551-sdk.html
+- http://gc.stand2surf.net/Ubuntu-14.04/system-qt.html
+- https://github.com/maxammann/aur-golden-cheetah-git/blob/master/PKGBUILD
