@@ -103,7 +103,7 @@ parts:
       cp src/Resources/images/gc.png $SNAPCRAFT_PART_INSTALL/usr/share/pixmaps
       $SNAPCRAFT_PART_INSTALL/usr/lib/vlc/vlc-cache-gen --force $SNAPCRAFT_PART_INSTALL/usr/lib/vlc/plugins/
 
-  # manual compile: not present in ubuntu 16.04 as a package
+  # qtwebchannel manual compile: not present in ubuntu 16.04 as a package
   qtwebchannel:
     source: git://code.qt.io/qt/qtwebchannel.git
     source-tag: v5.5.1 # use same version as the one in snapcraft on 16.04
