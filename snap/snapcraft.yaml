@@ -72,7 +72,8 @@ parts:
       - openssl
       - libusb-1.0-0
       - vlc
-      - r-base-core
+      #- r-base-core
+      - qttools5-dev-tools # for lrelease lib
       - libglu1-mesa
       - libgstreamer0.10-0
       - libgstreamer-plugins-base0.10-0
@@ -80,19 +81,57 @@ parts:
     prepare: |
       cp qwt/qwtconfig.pri.in qwt/qwtconfig.pri
       cp src/gcconfig.pri.in src/gcconfig.pri
+      #sed -i "s|#\(CONFIG += release.*\)|\1 static|" src/gcconfig.pri
+      #sed -i "s|#\(QMAKE_LRELEASE = \).*|\1 lrelease|" src/gcconfig.pri
+      #sed -i "s|^#DESTDIR|DESTDIR|" src/gcconfig.pri
+      #sed -i "s|^#OBJECTS_DIR|OBJECT_DIR|" src/gcconfig.pri
+      #sed -i "s|^#MOC_DIR|MOC_DIR|" src/gcconfig.pri
+      #sed -i "s|^#RCC_DIR|RCC_DIR|" src/gcconfig.pri
+      #sed -i "s|^#UI_DIR|UI_DIR|" src/gcconfig.pri
+      #sed -i "s|^#LIBZ_LIBS|LIBZ_LIBS|" src/gcconfig.pri
+      echo DEFINES += GC_VERSION=\\\\\\\"${GC_INFO}\\\\\\\" >> src/gcconfig.pri
+      echo QMAKE_LFLAGS += \"-Wl,-rpath,\\\'\\$\$ORIGIN/lib\\\'\" >> src/gcconfig.pri
+      echo DEFINES += NOWEBKIT >> src/gcconfig.pri
       sed -i "s|#\(CONFIG += release.*\)|\1 static|" src/gcconfig.pri
       sed -i "s|#\(QMAKE_LRELEASE = \).*|\1 lrelease|" src/gcconfig.pri
-      sed -i "s|^#DESTDIR|DESTDIR|" src/gcconfig.pri
-      sed -i "s|^#OBJECTS_DIR|OBJECT_DIR|" src/gcconfig.pri
-      sed -i "s|^#MOC_DIR|MOC_DIR|" src/gcconfig.pri
-      sed -i "s|^#RCC_DIR|RCC_DIR|" src/gcconfig.pri
-      sed -i "s|^#UI_DIR|UI_DIR|" src/gcconfig.pri
+      sed -i "s|^#QMAKE_CXXFLAGS|QMAKE_CXXFLAGS|" src/gcconfig.pri
+      sed -i "s|#\(SRMIO_INSTALL =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
+      sed -i "s|#\(D2XX_INCLUDE =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr/include|" src/gcconfig.pri
+      sed -i "s|#\(QWT3D_INSTALL =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
+      sed -i "s|#\(KML_INSTALL =\).*|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
+      sed -i "s|#\(ICAL_INSTALL =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
+      sed -i "s|#\(ICAL_INCLUDE =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr/include/libical|" src/gcconfig.pri
+      sed -i "s|#\(ICAL_LIBS    =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr/lib/libical.a $SNAPCRAFT_PART_INSTALL/usr/lib/libicalss.a $SNAPCRAFT_PART_INSTALL/usr/lib/libicalvcal.a|" src/gcconfig.pri
+      sed -i "s|#\(LMFIT_INSTALL =\).*|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
+      sed -i "s|#\(LIBUSB_INSTALL =\).*|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
+      sed -i "s|#\(LIBUSB_LIBS    =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr/lib/libusb.a -lusb-1.0 -ldl -ludev|" src/gcconfig.pri
+      sed -i "s|#\(VLC_INSTALL =.*\)|\1 /usr|" src/gcconfig.pri
+      sed -i "s|#\(VLC_LIBS    =.*\)|\1 -lvlc -lvlccore|" src/gcconfig.pri
+      sed -i "s|#\(SAMPLERATE_INSTALL =\).*|\1 /usr|" src/gcconfig.pri
+      sed -i "s|#\(SAMPLERATE_LIBS =\).*|\1 -lsamplerate|" src/gcconfig.pri
       sed -i "s|^#LIBZ_LIBS|LIBZ_LIBS|" src/gcconfig.pri
-      # TODO: add vlc and other missing options to src/gcconfig.pri
+      sed -i "s|^#HTPATH|HTPATH|" src/gcconfig.pri
+      sed -i "s|\(DEFINES += GC_VIDEO_NONE.*\)|#\1 |" src/gcconfig.pri
+      sed -i "s|#\(DEFINES += GC_VIDEO_VLC.*\)|\1|" src/gcconfig.pri
+      sed -i "s|#\(DEFINES += GC_WANT_R.*\)|\1|" src/gcconfig.pri
+      #sed -i "s/__GC_GOOGLE_CALENDAR_CLIENT_SECRET__/"$GC_GOOGLE_CALENDAR_CLIENT_SECRET"/" src/Core/Secrets.h
+      #sed -i "s/__GC_STRAVA_CLIENT_SECRET__/"$GC_STRAVA_CLIENT_SECRET"/" src/Core/Secrets.h
+      #sed -i "s/__GC_DROPBOX_CLIENT_SECRET__/"$GC_DROPBOX_CLIENT_SECRET"/" src/Core/Secrets.h
+      #sed -i "s/__GC_CYCLINGANALYTICS_CLIENT_SECRET__/"$GC_CYCLINGANALYTICS_CLIENT_SECRET"/" src/Core/Secrets.h
+      #sed -i "s/__GC_TWITTER_CONSUMER_SECRET__/"$GC_TWITTER_CONSUMER_SECRET"/" src/Core/Secrets.h
+      #sed -i "s/__GC_DROPBOX_CLIENT_ID__/"$GC_DROPBOX_CLIENT_ID"/" src/Core/Secrets.h
+      #sed -i "s/__GC_MAPQUESTAPI_KEY__/"$GC_MAPQUESTAPI_KEY"/" src/Core/Secrets.h
+      #sed -i "s/__GC_CLOUD_DB_BASIC_AUTH__/"$GC_CLOUD_DB_BASIC_AUTH"/" src/Core/Secrets.h
+      #sed -i "s/__GC_CLOUD_DB_APP_NAME__/"$GC_CLOUD_DB_APP_NAME"/" src/Core/Secrets.h
+      #sed -i "s/__GC_GOOGLE_DRIVE_CLIENT_ID__/"$GC_GOOGLE_DRIVE_CLIENT_ID"/" src/Core/Secrets.h
+      #sed -i "s/__GC_GOOGLE_DRIVE_CLIENT_SECRET__/"$GC_GOOGLE_DRIVE_CLIENT_SECRET"/" src/Core/Secrets.h
+      #sed -i "s/__GC_GOOGLE_DRIVE_API_KEY__/"$GC_GOOGLE_DRIVE_API_KEY"/" src/Core/Secrets.h
+      #sed -i "s/__GC_TODAYSPLAN_CLIENT_SECRET__/"$GC_TODAYSPLAN_CLIENT_SECRET"/" src/Core/Secrets.h
+      lupdate src/src.pro
     build: |
       export QT_SELECT=5
       qmake -recursive
-      make -j4
+      make --silent -j3 || make
     install: |
       mkdir -p $SNAPCRAFT_PART_INSTALL/opt/GoldenCheetah
       cp src/GoldenCheetah $SNAPCRAFT_PART_INSTALL/opt/GoldenCheetah/
@@ -101,6 +140,7 @@ parts:
       cp src/Resources/linux/*.rules $SNAPCRAFT_PART_INSTALL/etc/udev/rules.d
       mkdir -p $SNAPCRAFT_PART_INSTALL/usr/share/pixmaps
       cp src/Resources/images/gc.png $SNAPCRAFT_PART_INSTALL/usr/share/pixmaps
+      #cp ${TRAVIS_BUILD_DIR}/usr/lib/libftd2xx.so  $SNAPCRAFT_PART_INSTALL/usr/lib/
       $SNAPCRAFT_PART_INSTALL/usr/lib/vlc/vlc-cache-gen --force $SNAPCRAFT_PART_INSTALL/usr/lib/vlc/plugins/
 
   # qtwebchannel manual compile: not present in ubuntu 16.04 as a package

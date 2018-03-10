@@ -42,6 +42,7 @@ goldencheetah.GoldenCheetah
 
 Some references on how to manually compile GoldenCheetah on Linux:
 
+- https://github.com/gcoco/CI-for-GoldenCheetah/blob/Linux-QT5/.travis.yml
 - http://gc.stand2surf.net/Ubuntu-14.04/qt551-sdk.html
 - http://gc.stand2surf.net/Ubuntu-14.04/system-qt.html
 - https://github.com/maxammann/aur-golden-cheetah-git/blob/master/PKGBUILD
