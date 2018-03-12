@@ -41,7 +41,19 @@ parts:
       - libqt5serialport5-dev
       - qtmultimedia5-dev
       - qtconnectivity5-dev
+      - libglu1-mesa-dev
+      - libgstreamer0.10-0
+      - libgstreamer-plugins-base0.10-0
       - libssl-dev
+      - libsamplerate0-dev
+      - libpulse-dev
+      - r-base-dev
+      - libvlc-dev
+      - libvlccore-dev
+      - libusb-1.0-0-dev
+      - libudev-dev
+      - qt5-default
+      - qttools5-dev-tools
       - bison
       - flex
     stage-packages:
@@ -67,7 +79,7 @@ parts:
       - libqt5webkit5
       - libqt5widgets5
       - libqt5xml5
-      - r-cran-rinside
+      #- r-cran-rinside
       - libsamplerate0
       - openssl
       - libusb-1.0-0
@@ -79,38 +91,32 @@ parts:
       - libgstreamer-plugins-base0.10-0
       - gawk
     prepare: |
+      export GC_COMMIT=`git rev-parse HEAD | cut -c 1-10`
+      export GC_DATE=`git log -1 --date=iso --format=fuller | egrep ^CommitDate | cut -c 13-22`
+      export GC_INFO=${GC_DATE}':master@'${GC_COMMIT}
       cp qwt/qwtconfig.pri.in qwt/qwtconfig.pri
       cp src/gcconfig.pri.in src/gcconfig.pri
-      #sed -i "s|#\(CONFIG += release.*\)|\1 static|" src/gcconfig.pri
-      #sed -i "s|#\(QMAKE_LRELEASE = \).*|\1 lrelease|" src/gcconfig.pri
-      #sed -i "s|^#DESTDIR|DESTDIR|" src/gcconfig.pri
-      #sed -i "s|^#OBJECTS_DIR|OBJECT_DIR|" src/gcconfig.pri
-      #sed -i "s|^#MOC_DIR|MOC_DIR|" src/gcconfig.pri
-      #sed -i "s|^#RCC_DIR|RCC_DIR|" src/gcconfig.pri
-      #sed -i "s|^#UI_DIR|UI_DIR|" src/gcconfig.pri
-      #sed -i "s|^#LIBZ_LIBS|LIBZ_LIBS|" src/gcconfig.pri
-      echo DEFINES += GC_VERSION=\\\\\\\"${GC_INFO}\\\\\\\" >> src/gcconfig.pri
-      echo QMAKE_LFLAGS += \"-Wl,-rpath,\\\'\\$\$ORIGIN/lib\\\'\" >> src/gcconfig.pri
-      echo DEFINES += NOWEBKIT >> src/gcconfig.pri
+      #echo DEFINES += GC_VERSION=\\\\\\\"${GC_INFO}\\\\\\\" >> src/gcconfig.pri
+      #echo DEFINES += NOWEBKIT >> src/gcconfig.pri
       sed -i "s|#\(CONFIG += release.*\)|\1 static|" src/gcconfig.pri
       sed -i "s|#\(QMAKE_LRELEASE = \).*|\1 lrelease|" src/gcconfig.pri
       sed -i "s|^#QMAKE_CXXFLAGS|QMAKE_CXXFLAGS|" src/gcconfig.pri
-      sed -i "s|#\(SRMIO_INSTALL =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
-      sed -i "s|#\(D2XX_INCLUDE =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr/include|" src/gcconfig.pri
-      sed -i "s|#\(QWT3D_INSTALL =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
-      sed -i "s|#\(KML_INSTALL =\).*|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
-      sed -i "s|#\(ICAL_INSTALL =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
-      sed -i "s|#\(ICAL_INCLUDE =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr/include/libical|" src/gcconfig.pri
-      sed -i "s|#\(ICAL_LIBS    =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr/lib/libical.a $SNAPCRAFT_PART_INSTALL/usr/lib/libicalss.a $SNAPCRAFT_PART_INSTALL/usr/lib/libicalvcal.a|" src/gcconfig.pri
-      sed -i "s|#\(LMFIT_INSTALL =\).*|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
-      sed -i "s|#\(LIBUSB_INSTALL =\).*|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
-      sed -i "s|#\(LIBUSB_LIBS    =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr/lib/libusb.a -lusb-1.0 -ldl -ludev|" src/gcconfig.pri
+      #sed -i "s|#\(SRMIO_INSTALL =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
+      #sed -i "s|#\(D2XX_INCLUDE =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr/include|" src/gcconfig.pri
+      #sed -i "s|#\(QWT3D_INSTALL =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
+      #sed -i "s|#\(KML_INSTALL =\).*|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
+      #sed -i "s|#\(ICAL_INSTALL =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
+      #sed -i "s|#\(ICAL_INCLUDE =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr/include/libical|" src/gcconfig.pri
+      #sed -i "s|#\(ICAL_LIBS    =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr/lib/libical.a $SNAPCRAFT_PART_INSTALL/usr/lib/libicalss.a $SNAPCRAFT_PART_INSTALL/usr/lib/libicalvcal.a|" src/gcconfig.pri
+      #sed -i "s|#\(LMFIT_INSTALL =\).*|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
+      #sed -i "s|#\(LIBUSB_INSTALL =\).*|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
+      #sed -i "s|#\(LIBUSB_LIBS    =.*\)|\1 /usr/lib/libusb.a -lusb-1.0 -ldl -ludev|" src/gcconfig.pri
       sed -i "s|#\(VLC_INSTALL =.*\)|\1 /usr|" src/gcconfig.pri
       sed -i "s|#\(VLC_LIBS    =.*\)|\1 -lvlc -lvlccore|" src/gcconfig.pri
-      sed -i "s|#\(SAMPLERATE_INSTALL =\).*|\1 /usr|" src/gcconfig.pri
-      sed -i "s|#\(SAMPLERATE_LIBS =\).*|\1 -lsamplerate|" src/gcconfig.pri
+      #sed -i "s|#\(SAMPLERATE_INSTALL =\).*|\1 /usr|" src/gcconfig.pri
+      #sed -i "s|#\(SAMPLERATE_LIBS =\).*|\1 -lsamplerate|" src/gcconfig.pri
       sed -i "s|^#LIBZ_LIBS|LIBZ_LIBS|" src/gcconfig.pri
-      sed -i "s|^#HTPATH|HTPATH|" src/gcconfig.pri
+      #sed -i "s|^#HTPATH|HTPATH|" src/gcconfig.pri
       sed -i "s|\(DEFINES += GC_VIDEO_NONE.*\)|#\1 |" src/gcconfig.pri
       sed -i "s|#\(DEFINES += GC_VIDEO_VLC.*\)|\1|" src/gcconfig.pri
       sed -i "s|#\(DEFINES += GC_WANT_R.*\)|\1|" src/gcconfig.pri
@@ -128,6 +134,7 @@ parts:
       #sed -i "s/__GC_GOOGLE_DRIVE_API_KEY__/"$GC_GOOGLE_DRIVE_API_KEY"/" src/Core/Secrets.h
       #sed -i "s/__GC_TODAYSPLAN_CLIENT_SECRET__/"$GC_TODAYSPLAN_CLIENT_SECRET"/" src/Core/Secrets.h
       lupdate src/src.pro
+      cat src/gcconfig.pri
     build: |
       export QT_SELECT=5
       qmake -recursive
@@ -158,3 +165,4 @@ parts:
     source: src/
     plugin: dump
     after: [goldencheetah]
+
