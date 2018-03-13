@@ -41,19 +41,20 @@ parts:
       - libqt5serialport5-dev
       - qtmultimedia5-dev
       - qtconnectivity5-dev
+      - qt5-default
+      - qttools5-dev-tools
       - libglu1-mesa-dev
       - libgstreamer0.10-0
       - libgstreamer-plugins-base0.10-0
       - libssl-dev
       - libsamplerate0-dev
       - libpulse-dev
-      - r-base-dev
       - libvlc-dev
       - libvlccore-dev
+      - libusb-dev
       - libusb-1.0-0-dev
       - libudev-dev
-      - qt5-default
-      - qttools5-dev-tools
+      - r-base-dev
       - bison
       - flex
     stage-packages:
@@ -79,13 +80,13 @@ parts:
       - libqt5webkit5
       - libqt5widgets5
       - libqt5xml5
-      #- r-cran-rinside
       - libsamplerate0
       - openssl
       - libusb-1.0-0
       - vlc
-      #- r-base-core
+      - r-base-core
       - qttools5-dev-tools # for lrelease lib
+      - r-cran-rinside
       - libglu1-mesa
       - libgstreamer0.10-0
       - libgstreamer-plugins-base0.10-0
@@ -96,8 +97,8 @@ parts:
       export GC_INFO=${GC_DATE}':master@'${GC_COMMIT}
       cp qwt/qwtconfig.pri.in qwt/qwtconfig.pri
       cp src/gcconfig.pri.in src/gcconfig.pri
-      #echo DEFINES += GC_VERSION=\\\\\\\"${GC_INFO}\\\\\\\" >> src/gcconfig.pri
-      #echo DEFINES += NOWEBKIT >> src/gcconfig.pri
+      #echo DEFINES += GC_VERSION=\"${GC_INFO}\" >> src/gcconfig.pri
+      #echo DEFINES += NOWEBKIT >> src/gcconfig.pri # when WebKit is not available (e.g. QT >= 5.6)
       sed -i "s|#\(CONFIG += release.*\)|\1 static|" src/gcconfig.pri
       sed -i "s|#\(QMAKE_LRELEASE = \).*|\1 lrelease|" src/gcconfig.pri
       sed -i "s|^#QMAKE_CXXFLAGS|QMAKE_CXXFLAGS|" src/gcconfig.pri
@@ -109,14 +110,14 @@ parts:
       #sed -i "s|#\(ICAL_INCLUDE =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr/include/libical|" src/gcconfig.pri
       #sed -i "s|#\(ICAL_LIBS    =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr/lib/libical.a $SNAPCRAFT_PART_INSTALL/usr/lib/libicalss.a $SNAPCRAFT_PART_INSTALL/usr/lib/libicalvcal.a|" src/gcconfig.pri
       #sed -i "s|#\(LMFIT_INSTALL =\).*|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
-      #sed -i "s|#\(LIBUSB_INSTALL =\).*|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
-      #sed -i "s|#\(LIBUSB_LIBS    =.*\)|\1 /usr/lib/libusb.a -lusb-1.0 -ldl -ludev|" src/gcconfig.pri
-      sed -i "s|#\(VLC_INSTALL =.*\)|\1 /usr|" src/gcconfig.pri
+      sed -i "s|#\(LIBUSB_INSTALL =\).*|\1 /lib/x86_64-linux-gnu|" src/gcconfig.pri
+      #sed -i "s|#\(LIBUSB_LIBS    =.*\)|\1 /usr/lib/x86_64-linux-gnu/libusb-1.0.a -lusb-1.0 -ldl -ludev|" src/gcconfig.pri
+      sed -i "s|#\(VLC_INSTALL =.*\)|\1 /usr/lib/vlc|" src/gcconfig.pri
       sed -i "s|#\(VLC_LIBS    =.*\)|\1 -lvlc -lvlccore|" src/gcconfig.pri
-      #sed -i "s|#\(SAMPLERATE_INSTALL =\).*|\1 /usr|" src/gcconfig.pri
-      #sed -i "s|#\(SAMPLERATE_LIBS =\).*|\1 -lsamplerate|" src/gcconfig.pri
+      sed -i "s|#\(SAMPLERATE_INSTALL =\).*|\1 /usr|" src/gcconfig.pri
+      sed -i "s|#\(SAMPLERATE_LIBS =\).*|\1 -lsamplerate|" src/gcconfig.pri
       sed -i "s|^#LIBZ_LIBS|LIBZ_LIBS|" src/gcconfig.pri
-      #sed -i "s|^#HTPATH|HTPATH|" src/gcconfig.pri
+      sed -i "s|^#HTPATH|HTPATH|" src/gcconfig.pri
       sed -i "s|\(DEFINES += GC_VIDEO_NONE.*\)|#\1 |" src/gcconfig.pri
       sed -i "s|#\(DEFINES += GC_VIDEO_VLC.*\)|\1|" src/gcconfig.pri
       sed -i "s|#\(DEFINES += GC_WANT_R.*\)|\1|" src/gcconfig.pri
@@ -165,4 +166,3 @@ parts:
     source: src/
     plugin: dump
     after: [goldencheetah]
-
