@@ -13,6 +13,8 @@ confinement: strict
 apps:
   GoldenCheetah:
     command: desktop-launch $SNAP/opt/GoldenCheetah/GoldenCheetah
+    environment:
+      R_HOME: $SNAP/usr/lib/R
     desktop: usr/share/applications/goldencheetah.desktop
     plugs:
       - home
@@ -85,34 +87,39 @@ parts:
       - libusb-1.0-0
       - vlc
       - r-base-core
-      - qttools5-dev-tools # for lrelease lib
       - r-cran-rinside
+      - qttools5-dev-tools # for lrelease?
       - libglu1-mesa
       - libgstreamer0.10-0
       - libgstreamer-plugins-base0.10-0
       - gawk
     prepare: |
+      export SNAPCRAFT_PART_BUILD=$HOME/parts/$SNAPCRAFT_PROJECT_NAME/build
       export GC_COMMIT=`git rev-parse HEAD | cut -c 1-10`
       export GC_DATE=`git log -1 --date=iso --format=fuller | egrep ^CommitDate | cut -c 13-22`
       export GC_INFO=${GC_DATE}':master@'${GC_COMMIT}
       cp qwt/qwtconfig.pri.in qwt/qwtconfig.pri
       cp src/gcconfig.pri.in src/gcconfig.pri
       #echo DEFINES += GC_VERSION=\"${GC_INFO}\" >> src/gcconfig.pri
-      #echo DEFINES += NOWEBKIT >> src/gcconfig.pri # when WebKit is not available (e.g. QT >= 5.6)
       sed -i "s|#\(CONFIG += release.*\)|\1 static|" src/gcconfig.pri
+      #sed -i "s|#\(DEFINES += NOWEBKIT.*\)|\1|" src/gcconfig.pri # when WebKit is not available (e.g. QT >= 5.6)
+      sed -i "s|#\(DEFINES += GC_WANT_R.*\)|\1|" src/gcconfig.pri
       sed -i "s|#\(QMAKE_LRELEASE = \).*|\1 lrelease|" src/gcconfig.pri
       sed -i "s|^#QMAKE_CXXFLAGS|QMAKE_CXXFLAGS|" src/gcconfig.pri
-      #sed -i "s|#\(SRMIO_INSTALL =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
-      #sed -i "s|#\(D2XX_INCLUDE =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr/include|" src/gcconfig.pri
+      #sed -i "s|#\(SRMIO_INSTALL =.*\)|\1 /usr|" src/gcconfig.pri
+      wget http://www.ftdichip.com/Drivers/D2XX/Linux/libftd2xx1.0.4.tar.gz
+      tar -xf libftd2xx1.0.4.tar.gz
+      sed -i "s|#\(D2XX_INCLUDE =.*\)|\1 $SNAPCRAFT_PART_BUILD/libftd2xx1.0.4|" src/gcconfig.pri
       #sed -i "s|#\(QWT3D_INSTALL =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
       #sed -i "s|#\(KML_INSTALL =\).*|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
       #sed -i "s|#\(ICAL_INSTALL =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
-      #sed -i "s|#\(ICAL_INCLUDE =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr/include/libical|" src/gcconfig.pri
+      #sed -i "s|#\(ICAL_INCLUDE =.*\)|\1 $SNAPCRAFT_PART_BUILD/usr/include/libical|" src/gcconfig.pri
       #sed -i "s|#\(ICAL_LIBS    =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr/lib/libical.a $SNAPCRAFT_PART_INSTALL/usr/lib/libicalss.a $SNAPCRAFT_PART_INSTALL/usr/lib/libicalvcal.a|" src/gcconfig.pri
       #sed -i "s|#\(LMFIT_INSTALL =\).*|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
-      sed -i "s|#\(LIBUSB_INSTALL =\).*|\1 /lib/x86_64-linux-gnu|" src/gcconfig.pri
+      sed -i "s|#\(LIBUSB_INSTALL =\).*|\1 $SNAPCRAFT_PART_INSTALL/lib/x86_64-linux-gnu|" src/gcconfig.pri
       #sed -i "s|#\(LIBUSB_LIBS    =.*\)|\1 /usr/lib/x86_64-linux-gnu/libusb-1.0.a -lusb-1.0 -ldl -ludev|" src/gcconfig.pri
       sed -i "s|#\(VLC_INSTALL =.*\)|\1 /usr/lib/vlc|" src/gcconfig.pri
+      sed -i "s|#\(VLC_INCLUDE =.*\)|\1 /usr/include/vlc|" src/gcconfig.pri
       sed -i "s|#\(VLC_LIBS    =.*\)|\1 -lvlc -lvlccore|" src/gcconfig.pri
       sed -i "s|#\(SAMPLERATE_INSTALL =\).*|\1 /usr|" src/gcconfig.pri
       sed -i "s|#\(SAMPLERATE_LIBS =\).*|\1 -lsamplerate|" src/gcconfig.pri
@@ -120,7 +127,6 @@ parts:
       sed -i "s|^#HTPATH|HTPATH|" src/gcconfig.pri
       sed -i "s|\(DEFINES += GC_VIDEO_NONE.*\)|#\1 |" src/gcconfig.pri
       sed -i "s|#\(DEFINES += GC_VIDEO_VLC.*\)|\1|" src/gcconfig.pri
-      sed -i "s|#\(DEFINES += GC_WANT_R.*\)|\1|" src/gcconfig.pri
       #sed -i "s/__GC_GOOGLE_CALENDAR_CLIENT_SECRET__/"$GC_GOOGLE_CALENDAR_CLIENT_SECRET"/" src/Core/Secrets.h
       #sed -i "s/__GC_STRAVA_CLIENT_SECRET__/"$GC_STRAVA_CLIENT_SECRET"/" src/Core/Secrets.h
       #sed -i "s/__GC_DROPBOX_CLIENT_SECRET__/"$GC_DROPBOX_CLIENT_SECRET"/" src/Core/Secrets.h
@@ -160,6 +166,13 @@ parts:
     after: [desktop-qt5]
     build-packages:
       - qtbase5-private-dev
+
+  # D2XX - For Powertap downloads via USB
+  #d2xx:
+  #  source: http://www.ftdichip.com/Drivers/D2XX/Linux/libftd2xx1.0.4.tar.gz
+  #  plugin: qmake
+  #  qt-version: qt5
+  #  after: [desktop-qt5]
 
   # Additional files if any are copied from our src directory
   misc-files:
