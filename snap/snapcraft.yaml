@@ -109,7 +109,7 @@ parts:
       sed -i "s|#\(QMAKE_LRELEASE = \).*|\1 lrelease|" src/gcconfig.pri
       sed -i "s|^#QMAKE_CXXFLAGS|QMAKE_CXXFLAGS|" src/gcconfig.pri
       #sed -i "s|#\(SRMIO_INSTALL =.*\)|\1 /usr|" src/gcconfig.pri
-      wget http://www.ftdichip.com/Drivers/D2XX/Linux/libftd2xx1.0.4.tar.gz --nv
+      wget http://www.ftdichip.com/Drivers/D2XX/Linux/libftd2xx1.0.4.tar.gz -nv
       tar -xf libftd2xx1.0.4.tar.gz
       sed -i "s|#\(D2XX_INCLUDE =.*\)|\1 $SNAPCRAFT_PART_BUILD/libftd2xx1.0.4|" src/gcconfig.pri
       #sed -i "s|#\(QWT3D_INSTALL =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
