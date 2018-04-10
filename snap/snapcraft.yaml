@@ -95,9 +95,10 @@ parts:
       - libgstreamer-plugins-base0.10-0
       - gawk
     prepare: |
-      export SNAPCRAFT_PART_BUILD=$HOME/parts/$SNAPCRAFT_PROJECT_NAME/build
-      export GC_COMMIT=`git rev-parse HEAD | cut -c 1-10`
-      export GC_DATE=`git log -1 --date=iso --format=fuller | egrep ^CommitDate | cut -c 13-22`
+      #export SNAPCRAFT_PART_BUILD=$HOME/parts/$SNAPCRAFT_PROJECT_NAME/build
+      export SNAPCRAFT_PART_BUILD=$(pwd)
+      export GC_COMMIT=$(git rev-parse HEAD | cut -c 1-10)
+      export GC_DATE=$(git log -1 --date=iso --format=fuller | egrep ^CommitDate | cut -c 13-22)
       export GC_INFO=${GC_DATE}':master@'${GC_COMMIT}
       cp qwt/qwtconfig.pri.in qwt/qwtconfig.pri
       cp src/gcconfig.pri.in src/gcconfig.pri
@@ -108,7 +109,7 @@ parts:
       sed -i "s|#\(QMAKE_LRELEASE = \).*|\1 lrelease|" src/gcconfig.pri
       sed -i "s|^#QMAKE_CXXFLAGS|QMAKE_CXXFLAGS|" src/gcconfig.pri
       #sed -i "s|#\(SRMIO_INSTALL =.*\)|\1 /usr|" src/gcconfig.pri
-      wget http://www.ftdichip.com/Drivers/D2XX/Linux/libftd2xx1.0.4.tar.gz
+      wget http://www.ftdichip.com/Drivers/D2XX/Linux/libftd2xx1.0.4.tar.gz --nv
       tar -xf libftd2xx1.0.4.tar.gz
       sed -i "s|#\(D2XX_INCLUDE =.*\)|\1 $SNAPCRAFT_PART_BUILD/libftd2xx1.0.4|" src/gcconfig.pri
       #sed -i "s|#\(QWT3D_INSTALL =.*\)|\1 $SNAPCRAFT_PART_INSTALL/usr|" src/gcconfig.pri
