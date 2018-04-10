@@ -93,9 +93,9 @@ parts:
       - libglu1-mesa
       - libgstreamer0.10-0
       - libgstreamer-plugins-base0.10-0
+      - libdb5.3
       - gawk
     prepare: |
-      #export SNAPCRAFT_PART_BUILD=$HOME/parts/$SNAPCRAFT_PROJECT_NAME/build
       export SNAPCRAFT_PART_BUILD=$(pwd)
       export GC_COMMIT=$(git rev-parse HEAD | cut -c 1-10)
       export GC_DATE=$(git log -1 --date=iso --format=fuller | egrep ^CommitDate | cut -c 13-22)
