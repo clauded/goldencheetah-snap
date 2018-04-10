@@ -38,6 +38,7 @@ parts:
     qt-version: qt5
     after: [desktop-qt5] # see https://github.com/Ubuntu/snapcraft-desktop-helpers/blob/master/snapcraft.yaml
     build-packages:
+      - wget
       - libqt5svg5-dev
       - libqt5webkit5-dev
       - libqt5serialport5-dev
